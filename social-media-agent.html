@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Social Media Agent</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      background: #f7f8fa;
+      color: #1f2328;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top Nav ── */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-box {
+      width: 36px;
+      height: 36px;
+      background: #3b82d4;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1f2328;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-text span { color: #3b82d4; }
+
+    .nav-pill {
+      background: #eef3fb;
+      color: #3b82d4;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #57606a;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover { color: #3b82d4; }
+
+    /* ── Hero ── */
+    .hero {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 56px 32px 48px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eef3fb;
+      color: #3b82d4;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.4px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: #3b82d4;
+      border-radius: 50%;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: #1f2328;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      max-width: 600px;
+      margin: 0 auto 16px;
+    }
+
+    .hero h1 span { color: #3b82d4; }
+
+    .hero p {
+      font-size: 16px;
+      color: #57606a;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Capability Cards ── */
+    .capabilities {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      padding: 32px 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .cap-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 18px 20px;
+      width: 180px;
+      text-align: center;
+    }
+
+    .cap-card:hover { border-color: #3b82d4; }
+
+    .cap-icon {
+      margin: 0 auto 10px;
+      width: 40px;
+      height: 40px;
+      background: #f7f8fa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cap-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f2328;
+      margin-bottom: 4px;
+    }
+
+    .cap-card p {
+      font-size: 11.5px;
+      color: #57606a;
+      line-height: 1.5;
+    }
+
+    /* ── Platform Badges ── */
+    .platforms {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 24px 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .platform-label {
+      font-size: 12px;
+      color: #57606a;
+      font-weight: 500;
+      margin-right: 4px;
+    }
+
+    .badge {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #57606a;
+    }
+
+    .badge.twitter   { color: #1da1f2; border-color: #c8e8fb; background: #f0f9ff; }
+    .badge.linkedin  { color: #0a66c2; border-color: #bdd8f2; background: #f0f6ff; }
+    .badge.facebook  { color: #1877f2; border-color: #c3d8fb; background: #f0f5ff; }
+    .badge.instagram { color: #c13584; border-color: #f3c5e0; background: #fdf0f7; }
+
+    /* ── Main Chat Area ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 32px 0;
+    }
+
+    .chat-wrapper {
+      width: 100%;
+      max-width: 760px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #3b82d4;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-avatar {
+      width: 38px;
+      height: 38px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chat-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .chat-status {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.75);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 2px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: #86efac;
+      border-radius: 50%;
+    }
+
+    #root {
+      width: 100%;
+      min-height: 560px;
+    }
+
+    /* ── Suggestions ── */
+    .suggestions {
+      padding: 24px 32px;
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .suggestions h4 {
+      font-size: 12px;
+      font-weight: 600;
+      color: #57606a;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 12px;
+    }
+
+    .suggestion-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      color: #57606a;
+      cursor: default;
+      line-height: 1.4;
+    }
+
+    .chip:hover {
+      border-color: #3b82d4;
+      color: #3b82d4;
+      background: #eef3fb;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 11.5px;
+      color: #57606a;
+      padding: 20px 32px;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 32px;
+      background: #ffffff;
+    }
+
+    footer a { color: #3b82d4; text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 26px; }
+      .capabilities { gap: 10px; }
+      .cap-card { width: 140px; padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <header>
+    <div class="nav-brand">
+      <div class="logo-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.43.36a9 9 0 0 1-2.88 1.1A4.52 4.52 0 0 0 16.11 0c-2.5 0-4.52 2.02-4.52 4.52 0 .35.04.7.11 1.03C7.69 5.37 4.07 3.58 1.64.9a4.52 4.52 0 0 0-.61 2.27c0 1.57.8 2.95 2.01 3.76a4.49 4.49 0 0 1-2.05-.57v.06c0 2.19 1.56 4.02 3.63 4.43a4.54 4.54 0 0 1-2.04.08 4.52 4.52 0 0 0 4.22 3.14A9.07 9.07 0 0 1 0 19.54a12.8 12.8 0 0 0 6.92 2.03c8.3 0 12.85-6.88 12.85-12.85 0-.2 0-.39-.01-.58A9.18 9.18 0 0 0 22 5.92a9 9 0 0 1-2.6.71A4.52 4.52 0 0 0 23 3z"/>
+        </svg>
+      </div>
+      <span class="brand-text">Social<span>AI</span> Agent</span>
+      <span class="nav-pill">Powered by IBM watsonx</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Campaigns</a></li>
+      <li><a href="#">Analytics</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="live-dot"></span>
+      AI Agent · Live
+    </div>
+    <h1>Your Intelligent <span>Social Media</span> Assistant</h1>
+    <p>Craft posts, schedule content, analyse engagement, and manage your brand voice across all platforms — powered by IBM watsonx Orchestrate.</p>
+  </section>
+
+  <!-- ── Platform Badges ── -->
+  <div class="platforms">
+    <span class="platform-label">Supports:</span>
+    <span class="badge twitter">Twitter / X</span>
+    <span class="badge linkedin">LinkedIn</span>
+    <span class="badge facebook">Facebook</span>
+    <span class="badge instagram">Instagram</span>
+  </div>
+
+  <!-- ── Capability Cards ── -->
+  <div class="capabilities">
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+        </svg>
+      </div>
+      <h3>Post Creation</h3>
+      <p>Generate engaging captions and hashtags instantly</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c5cd8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      <h3>Scheduling</h3>
+      <p>Plan and schedule posts for optimal engagement</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </div>
+      <h3>Analytics</h3>
+      <p>Summarise reach, impressions, and follower growth</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c5cd8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
+        </svg>
+      </div>
+      <h3>Brand Voice</h3>
+      <p>Maintain a consistent tone across every channel</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <h3>Engagement</h3>
+      <p>Draft replies and manage community responses</p>
+    </div>
+  </div>
+
+  <!-- ── Chat Section ── -->
+  <main class="main">
+    <div class="chat-wrapper">
+      <div class="chat-header">
+        <div class="chat-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+          </svg>
+        </div>
+        <div>
+          <div class="chat-name">Social Media Agent</div>
+          <div class="chat-status"><span class="status-dot"></span> Online · Ready to assist</div>
+        </div>
+      </div>
+      <!-- IBM watsonx Orchestrate chat mounts here -->
+      <div id="root"></div>
+    </div>
+
+    <!-- ── Prompt Suggestions ── -->
+    <div class="suggestions">
+      <h4>Try asking</h4>
+      <div class="suggestion-chips">
+        <span class="chip">Write a LinkedIn post about our new product launch</span>
+        <span class="chip">Create 5 Twitter/X post ideas for a tech startup</span>
+        <span class="chip">Suggest hashtags for a fitness brand</span>
+        <span class="chip">Summarise this week's engagement metrics</span>
+        <span class="chip">Draft a reply to a negative comment professionally</span>
+        <span class="chip">Create an Instagram caption with a friendly tone</span>
+        <span class="chip">Schedule posts for maximum reach this week</span>
+        <span class="chip">Analyse competitor brand voice on LinkedIn</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p>Powered by <a href="https://www.ibm.com/products/watsonx-orchestrate" target="_blank">IBM watsonx Orchestrate</a> &nbsp;·&nbsp; Social Media Agent &nbsp;·&nbsp; AI-assisted content is for review before publishing</p>
+    <p style="margin-top:6px; color:#a0aab4; font-size:10.5px;">Made with IBM Bob</p>
+  </footer>
+
+  <!-- ── IBM watsonx Orchestrate Agent Script ── -->
+  <script>
+    window.wxOConfiguration = {
+      orchestrationID: "380ffc3735fa40289540c39c0cbebef4_e921549a-6b52-41e6-a114-9b1caa38c956",
+      hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
+      rootElementID: "root",
+      deploymentPlatform: "ibmcloud",
+      crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/380ffc3735fa40289540c39c0cbebef4:e921549a-6b52-41e6-a114-9b1caa38c956::",
+      chatOptions: {
+        agentId: "6b8048b8-41cb-4b26-ac17-2f3b3b91d53a"
+      }
+    };
+    setTimeout(function () {
+      var script = document.createElement('script');
+      script.src = window.wxOConfiguration.hostURL + '/wxochat/wxoLoader.js?embed=true';
+      script.addEventListener('load', function () {
+        wxoLoader.init();
+      });
+      document.head.appendChild(script);
+    }, 0);
+  </script>
+
+</body>
+</html>
